@@ -4,14 +4,17 @@ require_once '../models/MahasiswaMandiri.php';
 require_once '../models/MahasiswaBidikmisi.php';
 require_once '../models/MahasiswaPrestasi.php';
 
-// Mengambil data dinamis dari database lewat masing-masing model
-$dataMandiri   = MahasiswaMandiri::ambilSemua();
-$dataBidikmisi = MahasiswaBidikmisi::ambilSemua();
-$dataPrestasi  = MahasiswaPrestasi::ambilSemua();
+// Menangkap keyword pencarian jika ada
+$keyword = isset($_GET['cari']) ? trim($_GET['cari']) : '';
+
+// Mengoper keyword pencarian ke dalam model masing-masing
+$dataMandiri   = MahasiswaMandiri::ambilSemua($keyword);
+$dataBidikmisi = MahasiswaBidikmisi::ambilSemua($keyword);
+$dataPrestasi  = MahasiswaPrestasi::ambilSemua($keyword);
 
 $daftarMahasiswa = array_merge($dataMandiri, $dataBidikmisi, $dataPrestasi);
 
-// LOGIKA DINAMIS: Menghitung statistik langsung dari data yang ada
+// Hitung ulang statistik secara dinamis berdasarkan hasil pencarian
 $totalTagihanKampus = 0;
 $jumlahMandiri = count($dataMandiri);
 $jumlahBidikmisi = count($dataBidikmisi);
@@ -37,9 +40,20 @@ foreach ($daftarMahasiswa as $mhs) {
 <body>
 <div class="container my-5">
     
-    <div class="row mb-4">
-        <div class="col">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
             <h2 class="fw-bold text-dark m-0">Sistem Keuangan Mahasiswa</h2>
+        </div>
+        <div class="col-md-6">
+            <form method="GET" action="">
+                <div class="input-group shadow-sm">
+                    <input type="text" name="cari" class="form-control" placeholder="Cari nama mahasiswa..." value="<?= htmlspecialchars($keyword); ?>">
+                    <button class="btn btn-primary" type="submit">Cari</button>
+                    <?php if (!empty($keyword)): ?>
+                        <a href="mahasiswa_view.php" class="btn btn-secondary">Reset</a>
+                    <?php endif; ?>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -98,7 +112,7 @@ foreach ($daftarMahasiswa as $mhs) {
                 <tbody>
                     <?php if (empty($daftarMahasiswa)): ?>
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">Data di database kosong.</td>
+                        <td colspan="7" class="text-center text-muted py-4">Data nama "<b><?= htmlspecialchars($keyword) ?></b>" tidak ditemukan.</td>
                     </tr>
                     <?php else: ?>
                         <?php $no = 1; foreach ($daftarMahasiswa as $mhs): ?>
@@ -115,12 +129,7 @@ foreach ($daftarMahasiswa as $mhs) {
                                 </span>
                             </td>
                             <td>
-                                <small>
-                                    <?php 
-                                    // Memanggil method yang melakukan echo internal secara aman
-                                    $mhs->tampilkanSpesifikAkademik(); 
-                                    ?>
-                                </small>
+                                <small><?php $mhs->tampilkanSpesifikAkademik(); ?></small>
                             </td>
                             <td class="text-end">Rp <?= number_format($mhs->getTarifUKTNominal(), 0, ',', '.'); ?></td>
                             <td class="text-end fw-bold text-success">Rp <?= number_format($mhs->hitungTagihanSemester(), 0, ',', '.'); ?></td>
