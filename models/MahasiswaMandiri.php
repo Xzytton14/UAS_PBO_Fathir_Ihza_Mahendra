@@ -12,8 +12,9 @@ class MahasiswaMandiri extends Mahasiswa {
         $this->namaWali = $namaWali;
     }
 
+    // OVERRIDING: Aturan Mandiri baru
     public function hitungTagihanSemester() {
-        return $this->getTarifUKTNominal(); 
+        return $this->getTarifUKTNominal() + 100000; 
     }
 
     public function tampilkanSpesifikAkademik() {

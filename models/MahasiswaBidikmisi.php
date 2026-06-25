@@ -12,8 +12,9 @@ class MahasiswaBidikmisi extends Mahasiswa {
         $this->danaSakuSubsidi = $danaSakuSubsidi;
     }
 
+    // OVERRIDING: Aturan Bidikmisi gratis
     public function hitungTagihanSemester() {
-        return 0; // Bidikmisi gratis UKT
+        return 0; 
     }
 
     public function tampilkanSpesifikAkademik() {

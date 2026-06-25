@@ -12,8 +12,9 @@ class MahasiswaPrestasi extends Mahasiswa {
         $this->minimalIPKSyarat = $minimalIPKSyarat;
     }
 
+    // OVERRIDING: Aturan Prestasi baru (Hanya bayar 25%)
     public function hitungTagihanSemester() {
-        return $this->getTarifUKTNominal() * 0.5; // Potongan 50%
+        return $this->getTarifUKTNominal() * 0.25; 
     }
 
     public function tampilkanSpesifikAkademik() {
