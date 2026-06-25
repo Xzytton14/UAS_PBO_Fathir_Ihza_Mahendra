@@ -1,6 +1,7 @@
 <?php
-// File: MahasiswaBidikmisi.php
+// File: models/MahasiswaBidikmisi.php
 require_once 'Mahasiswa.php';
+require_once __DIR__ . '/../config/Koneksi.php';
 
 class MahasiswaBidikmisi extends Mahasiswa {
     private $nomorKIPKuliah;
@@ -12,15 +13,33 @@ class MahasiswaBidikmisi extends Mahasiswa {
         $this->danaSakuSubsidi = $danaSakuSubsidi;
     }
 
-    // OVERRIDING: Aturan Bidikmisi gratis
+    // METHOD QUERY SELECT-WHERE SPESIFIK BIDIKMISI
+    public static function ambilSemua() {
+        try {
+            $db = Koneksi::getKoneksi();
+            $stmt = $db->prepare("SELECT * FROM tabel_mahasiswa WHERE jenis_pembiayaan = 'bidikmisi'");
+            $stmt->execute();
+
+            $list = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $list[] = new self(
+                    $row['id_mahasiswa'], $row['nama_mahasiswa'], $row['nim'], 
+                    $row['semester'], $row['tarif_ukt_nominal'], 
+                    $row['nomor_KIP_kuliah'], $row['dana_saku_subsidi']
+                );
+            }
+            return $list;
+        } catch (PDOException $e) {
+            die("Error Query Bidikmisi: " . $e->getMessage());
+        }
+    }
+
     public function hitungTagihanSemester() {
         return 0; 
     }
 
     public function tampilkanSpesifikAkademik() {
-        echo "Jenis Pembiayaan: Bidikmisi / KIP-K<br>";
-        echo "Nomor KIP Kuliah: " . $this->nomorKIPKuliah . "<br>";
-        echo "Dana Saku/Bulan : Rp " . number_format($this->danaSakuSubsidi, 2, ',', '.') . "<br>";
+        echo "No KIP-K: " . $this->nomorKIPKuliah . " <br> Dana Saku: Rp " . number_format($this->danaSakuSubsidi, 0, ',', '.');
     }
 }
 ?>
