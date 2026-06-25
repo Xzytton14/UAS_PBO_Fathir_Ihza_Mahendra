@@ -1,13 +1,13 @@
 <?php
+// File: Mahasiswa.php
+
 abstract class Mahasiswa {
-    // ENKAPSULASI: Atribut diset private
     private $idMahasiswa;
     private $namaMahasiswa;
     private $nim;
     private $semester;
     private $tarifUKTNominal;
 
-    // Constructor PHP menggunakan __construct
     public function __construct($idMahasiswa, $namaMahasiswa, $nim, $semester, $tarifUKTNominal) {
         $this->idMahasiswa = $idMahasiswa;
         $this->namaMahasiswa = $namaMahasiswa;
@@ -16,7 +16,7 @@ abstract class Mahasiswa {
         $this->tarifUKTNominal = $tarifUKTNominal;
     }
 
-    // ENKAPSULASI: Getter dan Setter
+    // Encapsulation: Getter & Setter
     public function getIdMahasiswa() { return $this->idMahasiswa; }
     public function setIdMahasiswa($id) { $this->idMahasiswa = $id; }
 
@@ -32,7 +32,7 @@ abstract class Mahasiswa {
     public function getTarifUKTNominal() { return $this->tarifUKTNominal; }
     public function setTarifUKTNominal($ukt) { $this->tarifUKTNominal = $ukt; }
 
-    // METODE ABSTRAK: Wajib diimplementasikan ulang oleh kelas anak
+    // Metode Abstrak
     abstract public function hitungTagihanSemester();
     abstract public function tampilkanSpesifikAkademik();
 
